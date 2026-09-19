@@ -1,0 +1,1075 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0">
+<title>貢王班校外教學六日遊</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#F6F2E7;
+  --paper-deep:#EFE8D6;
+  --card:#FCFAF3;
+  --matcha:#6E8B5E;
+  --matcha-deep:#3C5236;
+  --matcha-pale:#DEE7D2;
+  --ink:#2E2B22;
+  --ink-soft:#6B6656;
+  --vermillion:#B8452F;
+  --vermillion-pale:#F4DAD2;
+  --gold:#B9924A;
+  --line:#E4DFCF;
+  --shadow:0 4px 14px rgba(60,50,30,0.06);
+  --shadow-sm:0 2px 8px rgba(60,50,30,0.05);
+  --radius-card:16px;
+  --radius-btn:11px;
+  --radius-pill:999px;
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+}
+*{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
+html,body{margin:0;padding:0;}
+body{
+  font-family:"Noto Sans TC",sans-serif;
+  background:var(--paper);
+  color:var(--ink);
+  min-height:100vh;
+  display:flex;
+  justify-content:center;
+}
+.app{
+  width:100%;
+  max-width:480px;
+  min-height:100vh;
+  position:relative;
+  background:transparent;
+  padding-bottom:calc(96px + var(--safe-bottom));
+}
+::selection{background:var(--matcha-pale);}
+a{color:inherit;}
+button{font-family:inherit;}
+
+/* ---------- Header ---------- */
+.app-header{
+  padding:30px 22px 16px;
+  position:relative;
+}
+.app-header .kicker{
+  font-size:12px;
+  letter-spacing:0.02em;
+  color:var(--matcha);
+  font-weight:600;
+  margin-bottom:8px;
+}
+.app-header h1{
+  font-size:23px;
+  font-weight:800;
+  margin:0;
+  line-height:1.3;
+  letter-spacing:-0.01em;
+  color:var(--ink);
+}
+.app-header .sub{
+  margin-top:6px;
+  font-size:13px;
+  color:var(--ink-soft);
+  line-height:1.6;
+}
+.header-rule{
+  height:1px;
+  margin:14px 22px 0;
+  background:var(--line);
+}
+
+/* ---------- Pages ---------- */
+.page{display:none;}
+.page.active{display:block; animation:fadein .25s ease;}
+@keyframes fadein{from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:translateY(0);}}
+
+/* ---------- Chip scroller (days / areas) ---------- */
+.chip-scroller{
+  display:flex;
+  gap:10px;
+  overflow-x:auto;
+  padding:4px 22px 14px;
+  scrollbar-width:none;
+}
+.chip-scroller::-webkit-scrollbar{display:none;}
+.chip{
+  flex:0 0 auto;
+  padding:9px 15px;
+  border-radius:var(--radius-btn);
+  background:var(--card);
+  border:1px solid var(--line);
+  font-size:13px;
+  font-weight:600;
+  color:var(--ink-soft);
+  cursor:pointer;
+  white-space:nowrap;
+  transition:background .15s ease, color .15s ease, border-color .15s ease;
+}
+.chip .chip-date{display:block; font-size:10px; font-weight:500; opacity:.7; margin-top:1px;}
+.chip.active{
+  background:var(--matcha-deep);
+  border-color:var(--matcha-deep);
+  color:#fff;
+}
+.type-chip{
+  padding:7px 13px;
+  font-size:12px;
+  background:var(--paper-deep);
+  border-color:var(--paper-deep);
+  color:var(--ink-soft);
+}
+.type-chip.active{
+  background:var(--vermillion);
+  border-color:var(--vermillion);
+  color:#fff;
+}
+
+/* ---------- Timeline ---------- */
+.timeline{
+  position:relative;
+  padding:4px 22px 8px 40px;
+}
+.timeline::before{
+  content:"";
+  position:absolute;
+  left:26px;
+  top:6px;
+  bottom:20px;
+  width:1px;
+  background:var(--line);
+}
+.gather-banner{
+  position:relative;
+  margin:0 22px 16px 40px;
+  background:var(--card);
+  border:1px solid var(--line);
+  border-left:3px solid var(--vermillion);
+  border-radius:12px;
+  padding:12px 14px;
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+.gather-banner .g-icon{font-size:17px;}
+.gather-banner .g-text .g-label{font-size:11.5px; color:var(--vermillion); font-weight:700;}
+.gather-banner .g-text .g-time{font-size:15px; font-weight:700; margin-top:2px; color:var(--ink);}
+
+.tl-node{
+  position:relative;
+  margin-bottom:16px;
+}
+.tl-dot{
+  position:absolute;
+  left:-30px;
+  top:21px;
+  width:7px;height:7px;
+  border-radius:50%;
+  background:var(--matcha);
+}
+.spot-card{
+  background:var(--card);
+  border:1px solid var(--line);
+  border-radius:var(--radius-card);
+  padding:16px 16px 14px;
+  box-shadow:var(--shadow-sm);
+}
+.spot-top{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:8px;
+  margin-bottom:8px;
+}
+.badge{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  font-size:11.5px;
+  font-weight:600;
+  padding:4px 10px 4px 8px;
+  border-radius:var(--radius-btn);
+  background:var(--paper-deep);
+  color:var(--ink-soft);
+}
+.badge::before{
+  content:"";
+  width:6px;height:6px;
+  border-radius:50%;
+  flex:0 0 auto;
+}
+.badge.food::before{background:#C98A2E;}
+.badge.activity::before{background:#C0503E;}
+.badge.shop::before{background:#B99A32;}
+.badge.spot::before{background:#5C7A4E;}
+.badge.hotel::before{background:#4A6178;}
+.badge.transit::before{background:#6E5FA0;}
+.spot-time{font-size:12px; color:var(--ink-soft); font-weight:600;}
+.spot-name{
+  font-size:16px;
+  font-weight:700;
+  margin:2px 0 6px;
+  color:var(--ink);
+  letter-spacing:-0.005em;
+  display:flex;
+  align-items:center;
+  flex-wrap:wrap;
+  gap:6px;
+}
+.spot-desc{
+  font-size:13.5px;
+  line-height:1.65;
+  color:var(--ink-soft);
+  margin-bottom:10px;
+}
+.spot-station{
+  font-size:12px;
+  color:var(--matcha-deep);
+  margin-bottom:10px;
+  display:flex;
+  gap:5px;
+  align-items:center;
+}
+.tag-row{display:flex; gap:6px; flex-wrap:wrap; margin-bottom:10px;}
+.tag{
+  font-size:11px;
+  font-weight:700;
+  color:#fff;
+  background:var(--vermillion);
+  padding:3px 8px;
+  border-radius:6px;
+}
+.card-actions{display:flex; gap:8px; flex-wrap:wrap;}
+.btn-nav{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  font-size:12.5px;
+  font-weight:600;
+  padding:8px 13px;
+  border-radius:var(--radius-btn);
+  border:1px solid var(--matcha);
+  color:var(--matcha-deep);
+  background:transparent;
+  text-decoration:none;
+  cursor:pointer;
+}
+.btn-nav:active{background:var(--matcha-pale);}
+.btn-nav.solid{background:var(--matcha-deep); color:#fff; border-color:var(--matcha-deep);}
+
+/* ---------- Section title (generic) ---------- */
+.section-block{padding:6px 22px 4px;}
+.section-title{
+  font-size:15px;
+  font-weight:700;
+  color:var(--ink);
+  margin:18px 0 10px;
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+.section-title::before{
+  content:"";
+  width:3px;height:14px;
+  background:var(--matcha);
+  border-radius:2px;
+  display:inline-block;
+}
+
+/* ---------- Exchange page ---------- */
+.calc-card{
+  margin:6px 22px 0;
+  background:var(--card);
+  border:1px solid var(--line);
+  border-radius:var(--radius-card);
+  padding:18px;
+  box-shadow:var(--shadow-sm);
+}
+.rate-row{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  font-size:13px;
+  color:var(--ink-soft);
+  margin-bottom:14px;
+  background:var(--matcha-pale);
+  padding:10px 12px;
+  border-radius:14px;
+}
+.rate-row input{
+  width:90px;
+  border:none;
+  background:#fff;
+  border-radius:8px;
+  padding:6px 8px;
+  font-size:13px;
+  font-weight:700;
+  color:var(--matcha-deep);
+  text-align:right;
+}
+.calc-display{
+  background:var(--matcha-deep);
+  color:#fff;
+  border-radius:16px;
+  padding:18px 16px;
+  margin-bottom:14px;
+}
+.calc-display .expr{
+  font-size:13px;
+  opacity:.7;
+  min-height:16px;
+  word-break:break-all;
+}
+#calcExprInput{
+  width:100%;
+  background:transparent;
+  border:none;
+  color:#fff;
+  font-size:26px;
+  font-weight:700;
+  font-family:inherit;
+  padding:4px 0;
+  outline:none;
+}
+.calc-result{
+  display:flex;
+  justify-content:space-between;
+  align-items:baseline;
+  border-top:1px solid rgba(255,255,255,0.18);
+  padding-top:10px;
+  margin-top:6px;
+}
+.calc-result .twd-label{font-size:12px; opacity:.75;}
+.calc-result .twd-value{font-size:22px; font-weight:700; color:#F3E2B8;}
+.keypad{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:8px;
+}
+.keypad button{
+  padding:16px 0;
+  border-radius:14px;
+  border:1px solid var(--line);
+  background:var(--paper);
+  font-size:17px;
+  font-weight:600;
+  color:var(--ink);
+}
+.keypad button.op{color:var(--matcha-deep); background:var(--matcha-pale); border-color:var(--matcha-pale);}
+.keypad button.eq{background:var(--vermillion); color:#fff; border-color:var(--vermillion);}
+.keypad button.clear{color:var(--vermillion); }
+.keypad button:active{opacity:.7;}
+.calc-hint{font-size:11.5px; color:var(--ink-soft); margin-top:10px; text-align:center;}
+
+/* ---------- Food page ---------- */
+.food-card{
+  margin:0 22px 12px;
+  background:var(--card);
+  border:1px solid var(--line);
+  border-radius:16px;
+  padding:14px 15px;
+  box-shadow:var(--shadow-sm);
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+}
+.food-top{display:flex; align-items:flex-start; gap:8px;}
+.food-name{font-size:15px; font-weight:700; letter-spacing:-0.005em; display:flex; align-items:center; flex-wrap:wrap; gap:6px;}
+.food-desc{font-size:13px; color:var(--ink-soft); line-height:1.6;}
+.food-area-note{
+  margin:2px 22px 14px;
+  font-size:12.5px;
+  color:var(--ink-soft);
+  background:var(--paper-deep);
+  padding:10px 12px;
+  border-radius:12px;
+}
+.food-type-title{
+  margin:4px 22px 8px;
+  font-size:12.5px;
+  font-weight:700;
+  color:var(--matcha-deep);
+  display:flex;
+  align-items:center;
+  gap:6px;
+}
+.food-type-title::after{
+  content:"";
+  flex:1;
+  height:1px;
+  background:var(--line);
+}
+
+/* ---------- Lists page ---------- */
+.list-card{
+  margin:0 22px 14px;
+  background:var(--card);
+  border:1px solid var(--line);
+  border-radius:var(--radius-card);
+  padding:16px;
+  box-shadow:var(--shadow-sm);
+}
+.check-row{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  padding:9px 0;
+  border-bottom:1px solid var(--line);
+}
+.check-row:last-child{border-bottom:none;}
+.check-box{
+  width:21px;height:21px;
+  border-radius:7px;
+  border:2px solid var(--matcha);
+  flex:0 0 auto;
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;
+  color:#fff;
+  font-size:13px;
+}
+.check-box.checked{background:var(--matcha); }
+.check-label{
+  font-size:14px;
+  flex:1;
+}
+.check-label.done{color:var(--ink-soft); text-decoration:line-through;}
+.blank-input{
+  border:none;
+  border-bottom:1px solid var(--line);
+  background:transparent;
+  font-size:14px;
+  flex:1;
+  padding:2px 0;
+  font-family:inherit;
+  color:var(--ink);
+}
+.blank-input::placeholder{color:#bcb49a;}
+textarea#memoBox{
+  width:100%;
+  min-height:150px;
+  border:1px solid var(--line);
+  border-radius:14px;
+  padding:12px;
+  font-family:inherit;
+  font-size:14px;
+  color:var(--ink);
+  resize:vertical;
+  background:var(--paper);
+  outline:none;
+}
+.save-hint{font-size:11.5px; color:var(--matcha-deep); margin-top:8px; text-align:right; min-height:14px;}
+
+/* ---------- Info page ---------- */
+.info-card{
+  margin:0 22px 14px;
+  background:var(--card);
+  border:1px solid var(--line);
+  border-radius:var(--radius-card);
+  padding:16px;
+  box-shadow:var(--shadow-sm);
+}
+.info-row{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:9px 0;
+  border-bottom:1px solid var(--line);
+  font-size:13.5px;
+}
+.info-row:last-child{border-bottom:none;}
+.info-row .label{color:var(--ink-soft);}
+.info-row .value{font-weight:700; color:var(--matcha-deep);}
+.link-btn{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:12px 4px;
+  border-bottom:1px solid var(--line);
+  text-decoration:none;
+  color:var(--ink);
+  font-size:14px;
+  font-weight:600;
+}
+.link-btn:last-child{border-bottom:none;}
+.link-btn .arrow{color:var(--matcha); font-size:16px;}
+.tip-list{margin:0; padding-left:18px; font-size:13.5px; color:var(--ink-soft); line-height:1.9;}
+.warn-note{
+  background:var(--vermillion-pale);
+  color:#7A2E1D;
+  border-radius:12px;
+  padding:10px 12px;
+  font-size:12.5px;
+  margin-top:10px;
+  line-height:1.6;
+}
+
+/* ---------- Bottom Nav ---------- */
+.bottom-nav{
+  position:fixed;
+  left:50%;
+  transform:translateX(-50%);
+  bottom:calc(14px + var(--safe-bottom));
+  width:calc(100% - 32px);
+  max-width:448px;
+  background:rgba(252,250,243,0.92);
+  backdrop-filter:blur(10px);
+  -webkit-backdrop-filter:blur(10px);
+  border:1px solid var(--line);
+  border-radius:20px;
+  display:flex;
+  justify-content:space-around;
+  align-items:center;
+  padding:8px 6px;
+  box-shadow:0 8px 24px rgba(60,50,20,0.10);
+  z-index:50;
+}
+.nav-btn{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:3px;
+  background:none;
+  border:none;
+  padding:6px 10px;
+  border-radius:12px;
+  color:var(--ink-soft);
+  cursor:pointer;
+  transition:background .15s ease, color .15s ease;
+}
+.nav-btn svg{width:21px;height:21px;}
+.nav-btn span{font-size:10.5px; font-weight:600;}
+.nav-btn.active{
+  color:var(--matcha-deep);
+  background:var(--matcha-pale);
+}
+
+@media (min-width:481px){
+  .app{border-left:1px solid var(--line); border-right:1px solid var(--line); box-shadow:0 0 40px rgba(60,50,20,0.06);}
+}
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- ============ HEADER ============ -->
+  <div class="app-header">
+    <div class="kicker" id="headerKicker">2026.10.01 — 10.06</div>
+    <h1 id="headerTitle">貢王班校外教學六日遊</h1>
+    <div class="sub" id="headerSub">關西六日五夜・京都・奈良・大阪</div>
+  </div>
+  <div class="header-rule"></div>
+
+  <!-- ============ PAGE: 行程 ITINERARY ============ -->
+  <section class="page active" id="page-itinerary">
+    <div class="chip-scroller" id="dayChips"></div>
+    <div class="timeline" id="dayTimeline"></div>
+  </section>
+
+  <!-- ============ PAGE: 匯率 EXCHANGE ============ -->
+  <section class="page" id="page-exchange">
+    <div class="section-block"><div class="section-title">即時換算計算機</div></div>
+    <div class="calc-card">
+      <div class="rate-row">
+        <span>💴 1 日圓 =</span>
+        <input type="number" id="rateInput" value="0.213" step="0.001">
+        <span>台幣（可自訂匯率）</span>
+      </div>
+      <div class="calc-display">
+        <div class="expr" id="calcExpr">日圓金額 / 算式</div>
+        <input type="text" id="calcExprInput" placeholder="例如 500+200*3" inputmode="decimal">
+        <div class="calc-result">
+          <span class="twd-label">換算台幣</span>
+          <span class="twd-value" id="twdResult">NT$ 0</span>
+        </div>
+      </div>
+      <div class="keypad" id="keypad">
+        <button data-k="7">7</button><button data-k="8">8</button><button data-k="9">9</button><button class="op" data-k="/">÷</button>
+        <button data-k="4">4</button><button data-k="5">5</button><button data-k="6">6</button><button class="op" data-k="*">×</button>
+        <button data-k="1">1</button><button data-k="2">2</button><button data-k="3">3</button><button class="op" data-k="-">－</button>
+        <button data-k="0">0</button><button data-k=".">.</button><button class="clear" data-k="C">C</button><button class="op" data-k="+">＋</button>
+        <button class="eq" data-k="=" style="grid-column:span 4;">＝ 計算</button>
+      </div>
+      <div class="calc-hint">輸入日圓金額或算式，按「＝」自動換算成台幣</div>
+    </div>
+  </section>
+
+  <!-- ============ PAGE: 美食 FOOD ============ -->
+  <section class="page" id="page-food">
+    <div class="section-block"><div class="section-title">在地美食推薦</div></div>
+    <div class="chip-scroller" id="foodChips"></div>
+    <div class="chip-scroller" id="foodTypeChips"></div>
+    <div class="food-area-note" id="foodAreaNote"></div>
+    <div id="foodList"></div>
+  </section>
+
+  <!-- ============ PAGE: 清單 LISTS ============ -->
+  <section class="page" id="page-lists">
+    <div class="section-block"><div class="section-title">行前準備 CheckList</div></div>
+    <div class="list-card" id="essentialList"></div>
+
+    <div class="section-block"><div class="section-title">自訂清單</div></div>
+    <div class="list-card" id="blankList"></div>
+
+    <div class="section-block"><div class="section-title">個人備忘錄</div></div>
+    <div class="list-card">
+      <textarea id="memoBox" placeholder="想帶的東西、想去的店、朋友交代的事…都可以寫在這裡"></textarea>
+      <div class="save-hint" id="memoSaveHint">&nbsp;</div>
+    </div>
+  </section>
+
+  <!-- ============ PAGE: 資訊 INFO ============ -->
+  <section class="page" id="page-info">
+    <div class="section-block"><div class="section-title">當地天氣預報</div></div>
+    <div class="info-card">
+      <a class="link-btn" href="https://www.jma.go.jp/bosai/forecast/#area_type=class20s&area_code=2610300" target="_blank" rel="noopener">🌤 日本氣象廳・京都府天氣 <span class="arrow">›</span></a>
+      <a class="link-btn" href="https://www.jma.go.jp/bosai/forecast/#area_type=class20s&area_code=2710000" target="_blank" rel="noopener">🌤 日本氣象廳・大阪府天氣 <span class="arrow">›</span></a>
+      <a class="link-btn" href="https://tenki.jp/" target="_blank" rel="noopener">☂️ tenki.jp 逐時預報 <span class="arrow">›</span></a>
+    </div>
+
+    <div class="section-block"><div class="section-title">緊急聯絡資訊</div></div>
+    <div class="info-card">
+      <div class="info-row"><span class="label">🚓 警察</span><span class="value">110</span></div>
+      <div class="info-row"><span class="label">🚑 救護車／消防</span><span class="value">119</span></div>
+      <div class="info-row"><span class="label">🇹🇼 駐大阪辦事處</span><span class="value">06-6227-8623</span></div>
+      <div class="info-row"><span class="label">☎️ 緊急聯絡（境外協助）</span><span class="value">+81-90-8794-4568</span></div>
+    </div>
+
+    <div class="section-block"><div class="section-title">旅遊禁忌與注意事項</div></div>
+    <div class="info-card">
+      <ul class="tip-list">
+        <li>肉類、肉製品（含泡麵調理包、香腸零食）禁止攜入日本，違者依法開罰。</li>
+        <li>液體、膠狀物、噴霧類手提行李單瓶須在100ml以下並裝入透明夾鏈袋。</li>
+        <li>打火機、鋰電池、行動電源請隨身攜帶，不可放入託運行李。</li>
+        <li>藥品建議保留原包裝，部分成分（如部分感冒藥、眼藥水）入境需注意數量限制。</li>
+        <li>電車、公車上請勿講電話、勿大聲交談；上下電扶梯請靠左（關西）站立。</li>
+        <li>路上與店內多無垃圾桶，垃圾請自行帶回住宿處理。</li>
+        <li>神社寺廟參拜請保持安靜，部分區域禁止拍照，請留意告示。</li>
+      </ul>
+      <div class="warn-note">⚠️ 如攜帶處方藥物超過一個月份量，建議事先備妥英文診斷證明或藥品成分說明。</div>
+    </div>
+  </section>
+
+  <!-- ============ BOTTOM NAV ============ -->
+  <nav class="bottom-nav">
+    <button class="nav-btn active" data-page="itinerary">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="4.5" width="17" height="16" rx="3"/><path d="M3.5 9.5h17"/><path d="M8 3v3M16 3v3"/><path d="M7.5 13.5h2M11 13.5h2M14.5 13.5h2M7.5 16.5h2M11 16.5h2"/></svg>
+      <span>行程</span>
+    </button>
+    <button class="nav-btn" data-page="exchange">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><path d="M9 8.5h4.5M9 8.5l3 4.5M9 8.5l3-4.5M12 13v3M10 13h4"/></svg>
+      <span>匯率</span>
+    </button>
+    <button class="nav-btn" data-page="food">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11a8 8 0 0 1 16 0z"/><path d="M3.5 11h17"/><path d="M4.5 14.5c1 3 4 5.5 7.5 5.5s6.5-2.5 7.5-5.5"/></svg>
+      <span>美食</span>
+    </button>
+    <button class="nav-btn" data-page="lists">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="4.5" y="3.5" width="15" height="17" rx="2.5"/><path d="M8 8.5h8M8 12.5h8M8 16.5h5"/></svg>
+      <span>清單</span>
+    </button>
+    <button class="nav-btn" data-page="info">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><path d="M12 11v5.5"/><circle cx="12" cy="8" r="0.9" fill="currentColor" stroke="none"/></svg>
+      <span>資訊</span>
+    </button>
+  </nav>
+</div>
+
+<script>
+/* ================= DATA ================= */
+const DAYS = [
+  {
+    id:1, date:"10/1（四）", place:"桃園機場 → 關西機場 → 臨空城 → 京都",
+    gather:{icon:"✈️", label:"去程班機　JX820", time:"08:30 － 12:15"},
+    spots:[
+      {cat:"transit", icon:"🚃", time:"08:30 → 12:15", name:"桃園國際機場 → 關西國際機場", desc:"於桃園國際機場集合報到，搭機出發前往關西；降落關西國際機場後，展開六天五夜的關西小旅行。", tags:[],
+        maps:[{label:"桃園國際機場 導航", url:"https://www.google.com/maps/search/?api=1&query=%E6%A1%83%E5%9C%92%E5%9C%8B%E9%9A%9B%E6%A9%9F%E5%A0%B4"},{label:"關西國際機場 導航", url:"https://www.google.com/maps/search/?api=1&query=%E9%97%9C%E8%A5%BF%E5%9C%8B%E9%9A%9B%E6%A9%9F%E5%A0%B4"}]},
+      {cat:"shop", icon:"🛍", time:"13:30-17:30", name:"臨空城 Rinku Premium Outlets", desc:"機場旁的大型 Outlet，品牌齊全，適合抵達當天先血拚暖身。", tags:["必買"], map:"https://www.google.com/maps/search/?api=1&query=Rinku+Premium+Outlets"},
+      {cat:"food", icon:"🍖", time:"晚餐", name:"燒肉Dining OneKarubi 臨空城店", desc:"店內用餐環境寬敞、舒適且乾淨，餐點品項眾多且可口，每樣品質都不錯，上菜很快且好吃。", tags:["必吃"], map:"https://www.google.com/maps/search/?api=1&query=%E7%84%BC%E8%82%89%E3%83%80%E3%82%A4%E3%83%8B%E3%83%B3%E3%82%B0%E3%83%AF%E3%83%B3%E3%82%AB%E3%83%AB%E3%83%93+%E3%82%8A%E3%82%93%E3%81%8F%E3%81%86%E3%82%BF%E3%82%A6%E3%83%B3%E5%BA%97"},
+      {cat:"transit", icon:"🚆", time:"", name:"搭乘 JR 関空特急 HARUKA", desc:"從關西機場直達京都的特急列車，車程約75分鐘，記得先劃位或購買周遊券。", tags:[], map:"https://www.google.com/maps/search/?api=1&query=JR%E4%BA%AC%E9%83%BD%E9%A7%85"},
+      {cat:"hotel", icon:"🏨", time:"入住", name:"京都住宿（10/1～3）", desc:"兩晚下榻於此，交通方便。步行 2 分鐘即可抵達 Avantia。有 Animate，出售新的動漫商品，還有 Radishinban，出售二手動漫商品等。二樓有堂吉訶德，營業至晚上12點。世界知名的日本品牌 GU 也位於4樓。", tags:[], station:"最近車站：依 Airbnb 頁面標示為準",
+        links:[{label:"Airbnb 訂房資訊", url:"https://www.airbnb.com.tw/rooms/1019899207160176269?unique_share_id=4e3fe742-be4b-474d-b5d5-6b1a5d48ed3f&viralityEntryPoint=1&s=76"},
+               {label:"地圖導航", url:"https://maps.app.goo.gl/rSsta8wTLXdtefgy5"}]}
+    ]
+  },
+  {
+    id:2, date:"10/2（五）", place:"京都市區一日",
+    spots:[
+      {cat:"spot", icon:"⛩", time:"上午", name:"清水寺", desc:"京都地標之一，木造舞台可俯瞰京都市區，秋楓時節景色絕美。", tags:["必拍"], map:"https://www.google.com/maps/search/?api=1&query=%E6%B8%85%E6%B0%B4%E5%AF%BA", station:"最近車站：京阪 清水五条站（步行約20分）"},
+      {cat:"spot", icon:"🏮", time:"", name:"二年坂・三年坂", desc:"通往清水寺的石坂老街，兩旁老屋改建成的雜貨與甜點小店林立。", tags:["必拍","必買"], map:"https://maps.app.goo.gl/WkXi7wDWA1b7T2Nx7", station:"最近車站：市巴士「清水道」站（步行約5分）"},
+      {cat:"food", icon:"🍱", time:"午餐", name:"錦市場", desc:"「京都的廚房」，一整條街的美食小吃與京都伴手禮，邊走邊吃最盡興。", tags:["必吃","必買"], map:"https://maps.app.goo.gl/no9SPjJHHGpNWY8r9", station:"最近車站：阪急／地下鐵 烏丸駅・四条駅（步行約3分）"},
+      {cat:"shop", icon:"🛍", time:"傍晚", name:"京都高島屋", desc:"京都市區指標百貨，地下街美食與伴手禮一次補齊。", tags:["必買"], map:"https://www.google.com/maps/search/?api=1&query=%E4%BA%AC%E9%83%BD%E9%AB%98%E5%B3%B6%E5%B1%8B", station:"最近車站：阪急 京都河原町駅（直結）"}
+    ]
+  },
+  {
+    id:3, date:"10/3（六）", place:"奈良一日 → 移動至大阪",
+    gather:{icon:"⏰", label:"近鉄特急チケットレスサービス 集合搭車", time:"08:55"},
+    spots:[
+      {cat:"transit", icon:"🚆", time:"08:55", name:"近鉄特急チケットレスサービス → 近鉄奈良站", desc:"請提早抵達月台，準時集合搭乘前往奈良的近鐵特急列車，抵達近鉄奈良駅後步行即可前往奈良公園周邊景點。", tags:[], station:"最近車站：近鉄奈良駅",
+        maps:[{label:"近鉄京都駅 導航", url:"https://www.google.com/maps/search/?api=1&query=%E8%BF%91%E9%90%B5%E4%BA%AC%E9%83%BD%E9%A7%85"},{label:"近鉄奈良站 導航", url:"https://maps.app.goo.gl/cJEjjLsfwKTDzepJ7"}]},
+      {cat:"spot", icon:"🦌", time:"", name:"奈良公園", desc:"與野生鹿群近距離接觸的知名公園，可購買鹿仙貝互動餵食。", tags:["必拍"], map:"https://www.google.com/maps/search/?api=1&query=%E5%A5%88%E8%89%AF%E5%85%AC%E5%9C%92"},
+      {cat:"spot", icon:"⛩", time:"", name:"東大寺", desc:"世界最大木造建築之一，供奉大佛的南大門氣勢磅礡。", tags:["必拍"], map:"https://www.google.com/maps/search/?api=1&query=%E6%9D%B1%E5%A4%A7%E5%AF%BA"},
+      {cat:"spot", icon:"⛩", time:"", name:"春日大社", desc:"參道兩旁上千座石燈籠，是奈良最具代表性的神社之一。", tags:[], map:"https://www.google.com/maps/search/?api=1&query=%E6%98%A5%E6%97%A5%E5%A4%A7%E7%A4%BE"},
+      {cat:"food", icon:"🍚", time:"午餐", name:"志津香釜飯 or 鰻屋", desc:"奈良必吃在地釜飯或鰻魚料理，建議提早前往避開排隊人潮。", tags:["必吃"], maps:[{label:"志津香釜飯 導航", url:"https://www.google.com/maps/search/?api=1&query=%E5%A5%88%E8%89%AF+%E5%BF%97%E6%B4%A5%E9%A6%99+%E9%87%9C%E9%A3%AF"},{label:"鰻屋 導航", url:"https://maps.app.goo.gl/DFo7daQsNczuwvXP7"}]},
+      {cat:"transit", icon:"🚆", time:"", name:"近鉄奈良站 → 大阪難波站", desc:"搭乘近鐵奈良線快速急行，從近鉄奈良駅直達大阪難波駅，車程約40分鐘、單程票價約680日圓，抵達後轉乘或步行前往大阪住宿。", tags:[], station:"最近車站：大阪難波駅",
+        maps:[{label:"近鉄奈良站 導航", url:"https://maps.app.goo.gl/cJEjjLsfwKTDzepJ7"},{label:"大阪難波站 導航", url:"https://www.google.com/maps/search/?api=1&query=%E5%A4%A7%E9%98%AA%E9%9B%A3%E6%B3%A2%E9%A7%85"}]},
+      {cat:"hotel", icon:"🏨", time:"入住", name:"大阪住宿（10/3～4）", desc:"移動至大阪市區下榻，方便隔天展開大阪市區行程。", tags:[], station:"最近車站：依 Airbnb 頁面標示為準",
+        links:[{label:"Airbnb 訂房資訊", url:"https://www.airbnb.com.tw/rooms/26261442?unique_share_id=865766c8-19be-4289-8756-7f4ea640ca25&viralityEntryPoint=1&s=76"},
+               {label:"地圖導航", url:"https://maps.app.goo.gl/HuHuSGxDUgkWxDQo6"}]},
+      {cat:"food", icon:"🍢", time:"晚餐", name:"野菜串卷 なると屋", desc:"蔬菜包裹肉品的創意串炸居酒屋，口味清爽不油膩，適合入住放好行李後吃一頓輕鬆的晚餐。", tags:["必吃"], map:"https://maps.app.goo.gl/vpPhTUxstuamMrZWA"}
+    ]
+  },
+  {
+    id:4, date:"10/4（日）", place:"大阪：通天閣・難波・心齋橋",
+    spots:[
+      {cat:"spot", icon:"🗼", time:"上午", name:"通天閣", desc:"大阪新世界地標高塔，展望台可眺望大阪市景，塔下昭和懷舊街道也很好逛。", tags:["必拍"], map:"https://www.google.com/maps/search/?api=1&query=%E9%80%9A%E5%A4%A9%E9%96%A3"},
+      {cat:"activity", icon:"🎢", time:"", name:"通天閣高空彈跳 / 溜滑梯", desc:"塔上刺激設施，喜歡挑戰的朋友別錯過（需視當日開放與體能狀況評估）。", tags:["必玩"], map:"https://www.google.com/maps/search/?api=1&query=%E9%80%9A%E5%A4%A9%E9%96%A3"},
+      {cat:"shop", icon:"🛍", time:"下午", name:"難波・心齋橋", desc:"大阪最熱鬧的購物與美食一級戰區，道頓堀、心齋橋筋商店街都在此區。", tags:["必買","必吃"], map:"https://www.google.com/maps/search/?api=1&query=%E5%BF%83%E6%96%8E%E6%A9%8B%E7%AD%8B%E5%95%86%E5%BA%97%E8%A1%97"}
+    ]
+  },
+  {
+    id:5, date:"10/5（一）", place:"勝尾寺 → 梅田",
+    spots:[
+      {cat:"spot", icon:"⛩", time:"上午", name:"勝尾寺", desc:"以「不倒翁必勝達摩」聞名的祈福名寺，滿山達摩相當壯觀，適合祈求好運。", tags:["必拍"], map:"https://www.google.com/maps/search/?api=1&query=%E5%8B%9D%E5%B0%BE%E5%AF%BA", guide:"https://www.gltjp.com/zh-hant/article/item/21264/"},
+      {cat:"shop", icon:"🛍", time:"下午", name:"梅田", desc:"大阪北區購物核心，百貨公司、地下街與摩天輪景觀一次滿足。", tags:["必買"], map:"https://www.google.com/maps/search/?api=1&query=%E6%A2%85%E7%94%B0"}
+    ]
+  },
+  {
+    id:6, date:"10/6（二）", place:"賦歸：關西機場",
+    gather:{icon:"✈️", label:"回程班機　JX823", time:"15:10 － 17:05"},
+    spots:[
+      {cat:"transit", icon:"🚃", time:"", name:"前往關西國際機場", desc:"整理行李、確認證件與伴手禮托運事項，預留充裕時間辦理登機。", tags:[], map:"https://www.google.com/maps/search/?api=1&query=%E9%97%9C%E8%A5%BF%E5%9C%8B%E9%9A%9B%E6%A9%9F%E5%A0%B4"},
+      {cat:"transit", icon:"✈️", time:"15:10", name:"回程班機 JX823", desc:"15:10 起飛，17:05 抵達，結束六天五夜的關西小旅行。", tags:[], map:"https://www.google.com/maps/search/?api=1&query=%E9%97%9C%E8%A5%BF%E5%9C%8B%E9%9A%9B%E6%A9%9F%E5%A0%B4"}
+    ]
+  }
+];
+
+const FOOD = {
+  "難波":{note:"道頓堀周邊人潮最旺，串炸、拉麵、章魚燒密集度最高。", items:[
+    {name:"一蘭拉麵 難波店", desc:"經典豚骨拉麵，個人隔間座位，深夜也營業。", tag:"必吃", type:"日式", map:"https://www.google.com/maps/search/?api=1&query=%E4%B8%80%E8%98%AD%E9%9B%A3%E6%B3%A2%E5%BA%97"},
+    {name:"元祖串かつだるま 道頓堀店", desc:"大阪串炸始祖名店，招牌「醬汁不能沾兩次」規矩很有趣。", tag:"必吃", type:"日式", map:"https://www.google.com/maps/search/?api=1&query=%E4%B8%B2%E3%81%8B%E3%81%A4%E3%81%A0%E3%82%8B%E3%81%BE+%E9%81%93%E9%A0%93%E5%A0%80%E5%BA%97"},
+    {name:"Makino 難波千日前店", desc:"天丼まきの人氣分店，酥脆天婦羅蓋飯份量十足、價格親民。", tag:"必吃", type:"日式", map:"https://maps.app.goo.gl/eG4Js9KuYRtU8sWx8"},
+    {name:"章魚燒 十八番 道頓堀", desc:"軟嫩軟爛口感、醬汁調味偏重，配上大量青蔥完全解膩，必點蔥口味。", tag:"必吃", type:"日式", map:"https://maps.app.goo.gl/Q7hDzWAJ7UG7Rg2o7"},
+    {name:"新時代 大阪難波店", desc:"平價連鎖居酒屋，燒烤與熱炒選擇多元，CP值高，適合聚餐續攤。", tag:"必吃", type:"居酒屋", map:"https://maps.app.goo.gl/17nwZY49LXEpb67T7"},
+    {name:"廣島燒 㐂代", desc:"職人手作廣島燒，高麗菜與麵條層層堆疊，鐵板現煎香氣十足。", tag:"必吃", type:"正餐", map:"https://maps.app.goo.gl/8bN6PhszzKFnyaF76"},
+    {name:"味乃家 本店", desc:"時時大排長龍的御好燒名店，選用清甜多汁的國產高麗菜，煎烤出鬆軟口感。", tag:"必吃", type:"正餐", map:"https://maps.app.goo.gl/Bin8RPiUgUHNoSj56"},
+    {name:"KOI Thé 難波店", desc:"來自台灣的人氣手搖飲品牌，逛街逛累了買一杯提神最對味。", tag:"必喝", type:"甜點", map:"https://maps.app.goo.gl/6SSxECqAf2KBUqXw6"},
+    {name:"551蓬萊 本店", desc:"551蓬萊的難波旗艦本店，現蒸肉包熱騰騰最對味。", tag:"必買", type:"甜點", map:"https://maps.app.goo.gl/8Aec9gAEoVE7ujJV8"},
+    {name:"老爺爺起司蛋糕", desc:"難波戎橋筋商店街排隊名店，使用丹麥進口傳統奶油起司，口感鬆軟香氣迷人，出爐時店員會搖鈴，遠遠就能聽到。", tag:"必買", type:"甜點", map:"https://maps.app.goo.gl/gDtMkJiW7CTbYm9NA"},
+    {name:"和牛燒肉餐廳 肉澤 大阪難波", desc:"難波在地和牛燒肉餐廳，肉質軟嫩、油花分布均勻，適合安排一頓正式燒肉晚餐。", tag:"必吃", type:"正餐", map:"https://maps.app.goo.gl/RfAaGoWfKUywdx15A"},
+    {name:"野菜串卷 なると屋", desc:"蔬菜包裹肉品的創意串炸居酒屋，口味清爽不油膩，適合搭配一杯生啤小酌。", tag:"必吃", type:"居酒屋", map:"https://maps.app.goo.gl/vpPhTUxstuamMrZWA"}
+  ]},
+  "心齋橋":{note:"商店街逛街配小吃，甜點與伴手禮選擇多。", items:[
+    {name:"甲賀流章魚燒", desc:"1974年創業的章魚燒老店，曾連三年獲「米其林指南必比登推薦」，是心齋橋美國村人氣最高的美食。醬汁偏鹹搭配美乃滋滋味剛好，章魚腳給得大塊又Q彈。", tag:"必吃", type:"日式", map:"https://www.google.com/maps/search/?api=1&query=%E7%94%B2%E8%B3%80%E6%B5%81+%E5%BF%83%E6%96%8E%E6%A9%8B"},
+    {name:"PABLO 半熟起司塔", desc:"排隊必買甜點伴手禮，起司塔外酥內軟。", tag:"必買", type:"甜點", map:"https://www.google.com/maps/search/?api=1&query=PABLO+%E5%BF%83%E6%96%8E%E6%A9%8B"},
+    {name:"551蓬萊 心齋橋店", desc:"大阪必買肉包代表，回程前記得預留胃口。", tag:"必買", type:"甜點", map:"https://www.google.com/maps/search/?api=1&query=551%E8%93%AC%E8%90%8A+%E5%BF%83%E6%96%8E%E6%A9%8B"},
+    {name:"Le Croissant Shinsaibashi", desc:"心齋橋人氣可頌專門店，層次分明外酥內軟，逛街途中買一個當點心剛剛好。", tag:"必吃", type:"甜點", map:"https://maps.app.goo.gl/59ki6PYn7fQJG5yh7"},
+    {name:"HARBS 心齋橋Parco店", desc:"日本知名千層蛋糕連鎖店，招牌水果千層鮮奶油綿密、水果新鮮，甜點控必訪。", tag:"必吃", type:"甜點", map:"https://maps.app.goo.gl/Nak7Gzu5dfM6BdkZ6"},
+    {name:"Melt Chocolate", desc:"心齋橋巧克力甜點專門店，濃郁滑順的巧克力甜點是可可控的心頭好。", tag:"必吃", type:"甜點", map:"https://maps.app.goo.gl/c26P5tDxrkR8svQcA"},
+    {name:"博多串燒 ばってん横丁", desc:"博多風味串燒居酒屋，串烤種類豐富、氣氛熱鬧，適合聚餐續攤小酌。", tag:"必吃", type:"居酒屋", map:"https://maps.app.goo.gl/rnES8QzQMatm5mAc9"}
+  ]},
+  "梅田":{note:"百貨林立，適合正式一餐或優雅下午茶。", items:[
+    {name:"人類都是麵類 Premium 梅田店", desc:"大阪近年超夯拉麵，Tabelog 高分名店。豬肉塊大且入味，麵條偏粗有咬勁。", tag:"必吃", type:"日式", map:"https://maps.app.goo.gl/FXzDHG1rhVipkr5w5"},
+    {name:"堂島生乳捲 Mon cher 阪急梅田店", desc:"源自大阪堂島飯店的超人氣生乳捲品牌，被譽為生乳捲界的精品，許多餐廳咖啡店也標榜使用他們家的蛋糕捲。", tag:"必買", type:"甜點", map:"https://maps.app.goo.gl/DFNAXVfeLhWvmvDZ6"},
+    {name:"GARIGUETTE Osaka 梅田", desc:"酥脆餅皮夾卡士達醬鋪上薄切草莓，口感水準之上，屬於清爽不厚重的甜點風格。", tag:"必買", type:"甜點", map:"https://maps.app.goo.gl/L1nLrP8tRSTB36nd6"},
+    {name:"Afternoon Tea Love&Table LUCUA 大阪店", desc:"千層蛋糕鋪上厚實水果、品質沒話說，水果豐富到千層本身的存在感反而變得比較低調。", tag:"必買", type:"甜點", map:"https://maps.app.goo.gl/7NiHkMpbNFVr3Noq9"},
+    {name:"すし酒場さしす 梅田店", desc:"梅田人氣連鎖壽司居酒屋，握壽司、酒類選擇豐富，價格親民、氣氛熱鬧，適合晚上小酌配壽司。", tag:"必吃", type:"居酒屋", map:"https://maps.app.goo.gl/4amYkFSpXDxrfCfp9"}
+  ]},
+  "京都":{note:"四条烏丸與京都車站周邊，正餐、拉麵、抹茶甜點都齊全。", items:[
+    {name:"Moritaya屋 木屋町店", desc:"明治元年創業的鴨川旁老字號牛肉專門店，主打頂級和牛壽喜燒與涮涮鍋，仲居會在桌邊現場調理，部分包廂還能欣賞鴨川風景，適合安排一頓豪華晚餐。", tag:"必吃", type:"正餐", map:"https://www.google.com/maps/search/?api=1&query=%E3%83%A2%E3%83%AA%E3%82%BF%E5%B1%8B+%E6%9C%A8%E5%B1%8B%E7%94%BA%E5%BA%97"},
+    {name:"三嶋亭 高島屋店", desc:"明治6年創業的京都百年壽喜燒老店，主打頂級和牛關西風壽喜燒，位於京都高島屋7樓，不用排隊也能吃到本店等級的美味。", tag:"必吃", type:"正餐", map:"https://www.google.com/maps/search/?api=1&query=%E4%B8%89%E5%B6%8B%E4%BA%AD+%E9%AB%98%E5%B3%B6%E5%B1%8B%E5%BA%97"},
+    {name:"名代豬排", desc:"京都市區人氣豬排名店，外酥內嫩、肉汁飽滿，是逛街途中補充體力的好選擇。", tag:"必吃", type:"正餐", map:"https://maps.app.goo.gl/jAiygHYfgUY1HZ6C6"},
+    {name:"麵屋 猪一", desc:"京都在地人氣拉麵名店，湯頭濃郁講究，常吸引饕客排隊朝聖。", tag:"必吃", type:"日式", map:"https://maps.app.goo.gl/kyybxPpH5snkeSiN7"},
+    {name:"肉奉行 京都牛光 河原町店", desc:"河原町人氣燒肉名店，肉品品質講究，適合安排一頓豐盛的燒肉正餐。", tag:"必吃", type:"正餐", map:"https://maps.app.goo.gl/mSLQKzbTbHrLmYWV7"},
+    {name:"炸牛排 京都勝牛 四条河原町店", desc:"外酥內嫩的炸牛排專門店，半熟牛肉搭配特製醬料，是逛街覓食的熱門選擇。", tag:"必吃", type:"正餐", map:"https://maps.app.goo.gl/cZA3MyNB27cNSDK48"}
+  ]},
+  "二年坂":{note:"京都老街風情濃厚，甜點與抹茶類最推薦。", items:[
+    {name:"GOKAGO", desc:"二年坂周邊的日式茶屋咖啡，以抹茶及宇治茶點聞名，古民家氛圍濃厚，適合坐下來品茶歇腳。", tag:"必喝", type:"甜點", map:"https://maps.app.goo.gl/BNWfQeeUi3HkfsAQ9"},
+    {name:"藤菜美 三年坂本店", desc:"三年坂上的人氣甜點店，抹茶聖代與蜜豆冰料多實在，逛老街逛累了坐下來歇腳最剛好。", tag:"必吃", type:"甜點", map:"https://maps.app.goo.gl/wXCBeLLrAcDuzpiNA"},
+    {name:"七味家本舖", desc:"清水寺參道百年七味粉老店，送禮自用皆宜。", tag:"必買", type:"日式", map:"https://www.google.com/maps/search/?api=1&query=%E4%B8%83%E5%91%B3%E5%AE%B6%E6%9C%AC%E8%88%96"},
+    {name:"二寧坂 星巴克 京都二寧坂店", desc:"由京町屋改建的星巴克，坐榻榻米喝咖啡體驗獨特。", tag:"必拍", type:"甜點", map:"https://www.google.com/maps/search/?api=1&query=%E6%98%9F%E5%B7%B4%E5%85%8B+%E4%BA%8C%E5%AF%A7%E5%9D%82%E5%BA%97"}
+  ]},
+  "新世界":{note:"通天閣周邊懷舊街區，串炸老店與昭和風情濃厚。", items:[
+    {name:"達摩串炸 新世界總店", desc:"創業於1929年、位於通天閣旁的元祖串炸總店。自製食用油讓炸物油耗味極低，麵包粉細緻仍保有酥脆口感，並嚴禁沾兩次醬，確保共用醬桶衛生無虞。", tag:"必吃", type:"日式", map:"https://maps.app.goo.gl/Y21tgyd2BBZ5PyS2A"}
+  ]},
+  "臨空城":{note:"抵達當天或回程前，最後採買與用餐的好地方。", items:[
+    {name:"燒肉Dining OneKarubi", desc:"行程安排的抵達日晚餐，肉質新鮮值得回味。", tag:"必吃", type:"正餐", map:"https://www.google.com/maps/search/?api=1&query=%E7%84%BC%E8%82%89%E3%83%80%E3%82%A4%E3%83%8B%E3%83%B3%E3%82%B0%E3%83%AF%E3%83%B3%E3%82%AB%E3%83%AB%E3%83%93+%E3%82%8A%E3%82%93%E3%81%8F%E3%81%86%E3%82%BF%E3%82%A6%E3%83%B3%E5%BA%97"},
+    {name:"大起水產 迴轉壽司 臨空Seacle店", desc:"臨空城人氣連鎖迴轉壽司，食材新鮮、迴轉台選擇多，適合抵達或回程前快速用餐。", tag:"必吃", type:"日式", map:"https://www.google.com/maps/search/?api=1&query=%E5%A4%A7%E8%B5%B7%E6%B0%B4%E7%94%A2+%E3%82%8A%E3%82%93%E3%81%8F%E3%81%86%E3%82%B7%E3%83%BC%E3%82%AF%E3%83%AB%E5%BA%97"},
+    {name:"しゃぶかつ かつ喜 シークル店", desc:"涮涮鍋與炸豬排二合一的獨特吃法，肉質軟嫩、湯頭清爽，適合正式吃一頓再登機。", tag:"必吃", type:"正餐", map:"https://www.google.com/maps/search/?api=1&query=%E3%81%8B%E3%81%A4%E5%96%9C+%E3%82%B7%E3%83%BC%E3%82%AF%E3%83%AB%E5%BA%97"}
+  ]}
+};
+const FOOD_TYPE_ORDER = ["正餐","居酒屋","日式","甜點"];
+
+const CAT_MAP = {
+  transit:{cls:"transit", label:"交通"},
+  food:{cls:"food", label:"食物"},
+  activity:{cls:"activity", label:"活動"},
+  shop:{cls:"shop", label:"購物"},
+  spot:{cls:"spot", label:"景點"},
+  hotel:{cls:"hotel", label:"酒店"}
+};
+
+/* ================= RENDER: ITINERARY ================= */
+let currentDay = 1;
+function renderDayChips(){
+  const wrap = document.getElementById('dayChips');
+  wrap.innerHTML = DAYS.map(d=>`
+    <div class="chip ${d.id===currentDay?'active':''}" data-day="${d.id}">
+      D${d.id}<span class="chip-date">${d.date.split('（')[0]}</span>
+    </div>`).join('');
+  wrap.querySelectorAll('.chip').forEach(chip=>{
+    chip.addEventListener('click', ()=>{ currentDay = parseInt(chip.dataset.day); renderDayChips(); renderTimeline(); });
+  });
+}
+function spotCardHtml(s){
+  const cat = CAT_MAP[s.cat] || CAT_MAP.spot;
+  const tagsInline = s.tags && s.tags.length ? s.tags.map(t=>`<span class="tag">${t}</span>`).join('') : '';
+  const stationHtml = s.station ? `<div class="spot-station">🚉 ${s.station}</div>` : '';
+  let actions = '';
+  if(s.map){ actions += `<a class="btn-nav" href="${s.map}" target="_blank" rel="noopener">📍 Google Maps 導航</a>`; }
+  if(s.maps){ actions += s.maps.map(m=>`<a class="btn-nav" href="${m.url}" target="_blank" rel="noopener">📍 ${m.label}</a>`).join(''); }
+  if(s.guide){ actions += `<a class="btn-nav" href="${s.guide}" target="_blank" rel="noopener">📖 旅遊攻略</a>`; }
+  if(s.links){ actions += s.links.map((l,i)=>`<a class="btn-nav ${i===1?'solid':''}" href="${l.url}" target="_blank" rel="noopener">${i===1?'📍 ':'🔗 '}${l.label}</a>`).join(''); }
+  return `
+  <div class="tl-node">
+    <div class="tl-dot"></div>
+    <div class="spot-card">
+      <div class="spot-top">
+        <span class="badge ${cat.cls}">${cat.label}</span>
+        ${s.time?`<span class="spot-time">${s.time}</span>`:''}
+      </div>
+      <div class="spot-name">${s.name}${tagsInline}</div>
+      <div class="spot-desc">${s.desc}</div>
+      ${stationHtml}
+      ${actions?`<div class="card-actions">${actions}</div>`:''}
+    </div>
+  </div>`;
+}
+function renderTimeline(){
+  const day = DAYS.find(d=>d.id===currentDay);
+  const gatherHtml = day.gather ? `
+    <div class="gather-banner">
+      <span class="g-icon">${day.gather.icon}</span>
+      <div class="g-text">
+        <div class="g-label">${day.gather.label}</div>
+        <div class="g-time">${day.gather.time}</div>
+      </div>
+    </div>` : '';
+  document.getElementById('headerSub').textContent = `${day.date}　${day.place}`;
+  document.getElementById('dayTimeline').innerHTML = gatherHtml + day.spots.map(spotCardHtml).join('');
+}
+
+/* ================= RENDER: FOOD ================= */
+let currentArea = "難波";
+let currentType = "全部";
+function renderFoodChips(){
+  const wrap = document.getElementById('foodChips');
+  wrap.innerHTML = Object.keys(FOOD).map(a=>`<div class="chip ${a===currentArea?'active':''}" data-area="${a}">${a}</div>`).join('');
+  wrap.querySelectorAll('.chip').forEach(chip=>{
+    chip.addEventListener('click', ()=>{ currentArea = chip.dataset.area; renderFoodChips(); renderFoodList(); });
+  });
+}
+function renderFoodTypeChips(){
+  const wrap = document.getElementById('foodTypeChips');
+  const options = ["全部", ...FOOD_TYPE_ORDER];
+  wrap.innerHTML = options.map(t=>`<div class="chip type-chip ${t===currentType?'active':''}" data-type="${t}">${t}</div>`).join('');
+  wrap.querySelectorAll('.chip').forEach(chip=>{
+    chip.addEventListener('click', ()=>{ currentType = chip.dataset.type; renderFoodTypeChips(); renderFoodList(); });
+  });
+}
+function foodCardHtml(it){
+  return `
+    <div class="food-card">
+      <div class="food-top">
+        <div class="food-name">${it.name}<span class="tag">${it.tag}</span></div>
+      </div>
+      <div class="food-desc">${it.desc}</div>
+      ${it.map?`<div class="card-actions"><a class="btn-nav" href="${it.map}" target="_blank" rel="noopener">📍 Google Maps 導航</a></div>`:''}
+    </div>`;
+}
+function renderFoodList(){
+  const data = FOOD[currentArea];
+  document.getElementById('foodAreaNote').textContent = `📍 ${currentArea}　${data.note}`;
+  let html = '';
+  const types = currentType === "全部" ? FOOD_TYPE_ORDER : [currentType];
+  types.forEach(type=>{
+    const group = data.items.filter(it=>it.type===type);
+    if(group.length === 0) return;
+    if(currentType === "全部"){ html += `<div class="food-type-title">${type}</div>`; }
+    html += group.map(foodCardHtml).join('');
+  });
+  if(!html){ html = `<div class="food-area-note">此分類目前尚無資料</div>`; }
+  document.getElementById('foodList').innerHTML = html;
+}
+
+/* ================= EXCHANGE CALCULATOR ================= */
+let exprBuffer = "";
+function updateCalcDisplay(){
+  document.getElementById('calcExprInput').value = exprBuffer;
+}
+function safeEval(expr){
+  if(!/^[0-9+\-*/.() ]+$/.test(expr)) return null;
+  try{
+    // eslint-disable-next-line no-new-func
+    const val = Function('"use strict"; return (' + expr + ')')();
+    return (typeof val === 'number' && isFinite(val)) ? val : null;
+  }catch(e){ return null; }
+}
+function doCalc(){
+  const rate = parseFloat(document.getElementById('rateInput').value) || 0;
+  const val = safeEval(exprBuffer || "0");
+  if(val === null){
+    document.getElementById('twdResult').textContent = "格式錯誤";
+    return;
+  }
+  document.getElementById('calcExpr').textContent = exprBuffer ? `${exprBuffer} =` : '日圓金額 / 算式';
+  const twd = val * rate;
+  document.getElementById('twdResult').textContent = `NT$ ${twd.toLocaleString('zh-TW',{maximumFractionDigits:1})}`;
+}
+document.getElementById('keypad').addEventListener('click', (e)=>{
+  const btn = e.target.closest('button');
+  if(!btn) return;
+  const k = btn.dataset.k;
+  if(k === 'C'){ exprBuffer = ""; document.getElementById('twdResult').textContent = "NT$ 0"; document.getElementById('calcExpr').textContent = '日圓金額 / 算式'; }
+  else if(k === '='){ doCalc(); }
+  else { exprBuffer += (k === '÷'?'/':k); }
+  updateCalcDisplay();
+});
+document.getElementById('calcExprInput').addEventListener('input', (e)=>{ exprBuffer = e.target.value; });
+document.getElementById('calcExprInput').addEventListener('keydown', (e)=>{ if(e.key==='Enter') doCalc(); });
+document.getElementById('rateInput').addEventListener('input', doCalc);
+
+/* ================= LISTS + STORAGE ================= */
+const ESSENTIALS = ["護照","日幣","充電線","暈車藥","實體信用卡"];
+const BLANK_COUNT = 20;
+let checklistState = {}; // key -> {checked, text}
+let memoText = "";
+
+function defaultChecklist(){
+  const st = {};
+  ESSENTIALS.forEach((name,i)=>{ st['e'+i] = {checked:false, text:name}; });
+  for(let i=0;i<BLANK_COUNT;i++){ st['b'+i] = {checked:false, text:""}; }
+  return st;
+}
+
+function renderEssentials(){
+  const wrap = document.getElementById('essentialList');
+  wrap.innerHTML = ESSENTIALS.map((name,i)=>{
+    const key = 'e'+i;
+    const item = checklistState[key] || {checked:false, text:name};
+    return `<div class="check-row">
+      <div class="check-box ${item.checked?'checked':''}" data-key="${key}">${item.checked?'✓':''}</div>
+      <div class="check-label ${item.checked?'done':''}">${name}</div>
+    </div>`;
+  }).join('');
+  wrap.querySelectorAll('.check-box').forEach(box=>{
+    box.addEventListener('click', ()=>{
+      const key = box.dataset.key;
+      checklistState[key].checked = !checklistState[key].checked;
+      renderEssentials();
+      saveChecklist();
+    });
+  });
+}
+function renderBlanks(){
+  const wrap = document.getElementById('blankList');
+  wrap.innerHTML = '';
+  for(let i=0;i<BLANK_COUNT;i++){
+    const key = 'b'+i;
+    const item = checklistState[key] || {checked:false, text:""};
+    const row = document.createElement('div');
+    row.className = 'check-row';
+    row.innerHTML = `<div class="check-box ${item.checked?'checked':''}" data-key="${key}">${item.checked?'✓':''}</div>
+      <input class="blank-input" data-key="${key}" placeholder="自訂項目 ${i+1}" value="${item.text.replace(/"/g,'&quot;')}">`;
+    wrap.appendChild(row);
+  }
+  wrap.querySelectorAll('.check-box').forEach(box=>{
+    box.addEventListener('click', ()=>{
+      const key = box.dataset.key;
+      checklistState[key].checked = !checklistState[key].checked;
+      renderBlanks();
+      saveChecklist();
+    });
+  });
+  wrap.querySelectorAll('.blank-input').forEach(inp=>{
+    inp.addEventListener('input', (e)=>{
+      const key = e.target.dataset.key;
+      checklistState[key].text = e.target.value;
+      saveChecklist();
+    });
+  });
+}
+
+let saveTimer = null;
+function flashSaved(){
+  const hint = document.getElementById('memoSaveHint');
+  hint.textContent = '已自動儲存';
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(()=>{ hint.textContent = ''; }, 1200);
+}
+async function saveChecklist(){
+  try{
+    if(window.storage){ await window.storage.set('checklist-state', JSON.stringify(checklistState), false); flashSaved(); }
+  }catch(err){ console.error('儲存清單失敗', err); }
+}
+async function saveMemo(){
+  try{
+    if(window.storage){ await window.storage.set('personal-memo', memoText, false); flashSaved(); }
+  }catch(err){ console.error('儲存備忘錄失敗', err); }
+}
+async function loadStorage(){
+  checklistState = defaultChecklist();
+  try{
+    if(window.storage){
+      const c = await window.storage.get('checklist-state').catch(()=>null);
+      if(c && c.value){ checklistState = Object.assign(defaultChecklist(), JSON.parse(c.value)); }
+      const m = await window.storage.get('personal-memo').catch(()=>null);
+      if(m && m.value){ memoText = m.value; }
+    }
+  }catch(err){ console.error('讀取儲存資料失敗', err); }
+  renderEssentials();
+  renderBlanks();
+  document.getElementById('memoBox').value = memoText;
+}
+document.getElementById('memoBox').addEventListener('input', (e)=>{
+  memoText = e.target.value;
+  clearTimeout(window._memoDebounce);
+  window._memoDebounce = setTimeout(saveMemo, 500);
+});
+
+/* ================= NAV ================= */
+document.querySelectorAll('.nav-btn').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+    document.getElementById('page-'+btn.dataset.page).classList.add('active');
+    const headerMap = {
+      itinerary:{k:"2026.10.01 — 10.06", t:"貢王班校外教學六日遊"},
+      exchange:{k:"換算小工具", t:"即時匯率換算"},
+      food:{k:"在地美食地圖", t:"美食推薦"},
+      lists:{k:"行前 & 隨手記", t:"旅行清單"},
+      info:{k:"旅遊安全", t:"實用資訊"}
+    };
+    const h = headerMap[btn.dataset.page];
+    document.getElementById('headerKicker').textContent = h.k;
+    document.getElementById('headerTitle').textContent = h.t;
+    if(btn.dataset.page === 'itinerary'){ renderTimeline(); }
+    else { document.getElementById('headerSub').style.display='none'; }
+    if(btn.dataset.page === 'itinerary'){ document.getElementById('headerSub').style.display='block'; }
+  });
+});
+
+/* ================= INIT ================= */
+renderDayChips();
+renderTimeline();
+renderFoodChips();
+renderFoodTypeChips();
+renderFoodList();
+doCalc();
+loadStorage();
+</script>
+</body>
+</html>
